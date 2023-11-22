@@ -1,21 +1,16 @@
 # cli.py
 import random
-
 from logic import Board, Player, Bot
-
 
 class Game:
     def __init__(self, num_of_players='1'):
         symbols = ['X', 'O']
         random.shuffle(symbols)
-
+        self.player1 = Player(symbols[0])
         if num_of_players == '1':
-            self.player1 = Player(symbols[0])
             self.player2 = Bot(symbols[1])
-        elif num_of_players == '2':
-            self.player1 = Player(symbols[0])
+        else:
             self.player2 = Player(symbols[1])
-
         self.board = Board()
         self.current_player = self.player1
 
@@ -24,21 +19,19 @@ class Game:
             self.board.print_board()
             print('Next turn: ', self.current_player.symbol)
             x, y = self.current_player.make_move(self.board.board)
-            if x == 'q' and y == 'q':
+            if (x, y) == ('q', 'q'):
                 print("Game exited by the player.")
                 break
             self.board.board[x][y] = self.current_player.symbol
-            self.current_player = self.player1 if self.current_player == self.player2 else self.player2
+            self.current_player = self.player2 if self.current_player == self.player1 else self.player1
 
         winner = self.board.get_winner()
-
         self.board.print_board()
 
         if winner:
-            print(winner, ' Won')
+            print(f'{winner} Won')
         elif self.board.is_draw():
             print("It's a draw.")
-
 
 if __name__ == '__main__':
     while True:
